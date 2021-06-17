@@ -70,14 +70,52 @@ public class MiningMethodFieldTransformer extends SceneTransformer {
 			{
 				continue;
 			}
-			
+
+			SootClass superCls = sc;
+			StringBuilder superClsNames = new StringBuilder();
+			superClsNames.append(sc.getName().replace("$", "."));
+			boolean firstSuperCls = true;
+			while (superCls.hasSuperclass()) {
+				superCls = superCls.getSuperclass();
+				if (!superCls.getName().equals("java.lang.Object")) {
+					if (firstSuperCls) {
+						firstSuperCls = false;
+						superClsNames.append(":" + superCls.getName().replace("$", "."));
+					} else {
+						superClsNames.append("," + superCls.getName().replace("$", "."));
+					}
+				}
+			}
+
+			Chain<SootClass> interfaces = sc.getInterfaces();
+			for (SootClass cls : interfaces) {
+				if (firstSuperCls) {
+					firstSuperCls = false;
+					superClsNames.append(":" + cls.getName().replace("$", "."));
+				} else {
+					superClsNames.append("," + cls.getName().replace("$", "."));
+				}
+
+				SootClass interfaceSuper = cls;
+				while (interfaceSuper.hasSuperclass()) {
+					interfaceSuper = interfaceSuper.getSuperclass();
+					if (!interfaceSuper.getName().equals("java.lang.Object")) {
+						if (firstSuperCls) {
+							firstSuperCls = false;
+							superClsNames.append(":" + interfaceSuper.getName().replace("$", "."));
+						} else {
+							superClsNames.append("," + interfaceSuper.getName().replace("$", "."));
+						}
+					}
+				}
+			}
 			List<SootMethod> methods = sc.getMethods();
 			for (int i = 0; i < methods.size(); i++)
 			{
 				String sig = methods.get(i).getSignature().replace("$", ".");
 				String mods = Modifier.toString(methods.get(i).getModifiers());
-				String apiMethod = sig + ":<" + mods + ">";
-				System.out.println(apiMethod);
+				String apiMethod = sig + ":<" + mods + ">:<" + superClsNames.toString() + ">";
+//				System.out.println(apiMethod);
 				apimethods.add(apiMethod);
 			}
 			
@@ -123,10 +161,10 @@ public class MiningMethodFieldTransformer extends SceneTransformer {
 					}
 				}
 				if (tagValues.toString().isEmpty()) {
-					String apifield = fieldDec + ":<" + mods + ">";
+					String apifield = fieldDec + ":<" + mods + ">:<" + "" + ">:<" + superClsNames.toString() + ">";
 					apifields.add(apifield);
 				} else {
-					String apifield = fieldDec + ":<" + mods + ">:<" + tagValues.toString() + ">";
+					String apifield = fieldDec + ":<" + mods + ">:<" + tagValues.toString().replace("\n", " ") + ">:<" + superClsNames.toString() + ">";
 					apifields.add(apifield);
 				}
 			}
