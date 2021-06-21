@@ -114,8 +114,10 @@ public class MiningMethodFieldTransformer extends SceneTransformer {
 			{
 				String sig = methods.get(i).getSignature().replace("$", ".");
 				String mods = Modifier.toString(methods.get(i).getModifiers());
+				if (!mods.isEmpty() && mods.contains("private")) {
+					continue;
+				}
 				String apiMethod = sig + ":<" + mods + ">:<" + superClsNames.toString() + ">";
-//				System.out.println(apiMethod);
 				apimethods.add(apiMethod);
 			}
 			
@@ -123,6 +125,9 @@ public class MiningMethodFieldTransformer extends SceneTransformer {
 			for (SootField field : chain) {
 				String fieldDec = field.getSignature().replace("$", ".");
 				String mods = Modifier.toString(field.getModifiers());
+				if (!mods.isEmpty() && mods.contains("private")) {
+					continue;
+				}
 				StringBuilder tagValues = new StringBuilder();
 				List<Tag> tags = field.getTags();
 				boolean firstValue = true;
