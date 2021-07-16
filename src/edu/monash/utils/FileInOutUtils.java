@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
+import com.opencsv.CSVWriter;
+
 public class FileInOutUtils {
     public static void writeToFile(String content, String filePath) {
         try {
@@ -22,7 +24,7 @@ public class FileInOutUtils {
             e.printStackTrace();
         }
     }
-    
+
     public static void writeToFile(Set<String> sets, String filePath) {
     	StringBuilder sb = new StringBuilder();
     	for (String content : sets) {
@@ -30,12 +32,37 @@ public class FileInOutUtils {
     	}
     	writeToFile(sb.toString(), filePath);
     }
-    
+
     public static void writeToFile(List<String> sets, String filePath) {
     	StringBuilder sb = new StringBuilder();
     	for (String content : sets) {
     		sb.append(content + "\n");
     	}
     	writeToFile(sb.toString(), filePath);
+    }
+
+    public static void directoryCreate(String dirPath) {
+    	File file = new File(dirPath);
+    	if (!file.exists()) {
+    		file.mkdir();
+    	}
+    }
+
+    public static void writeToCSV(List<String[]> csvData, String csvPath) {
+    	File file = new File(csvPath);
+    	try {
+    		// create FileWriter object with file as parameter
+    		FileWriter outputfile = new FileWriter(file);
+
+    		// create CSVWriter object filewriter object as parameter
+    		CSVWriter writer = new CSVWriter(outputfile);
+    		writer.writeAll(csvData);
+
+    		// closing writer connection
+    		writer.close();
+    	} catch (IOException e) {
+    		// TODO Auto-generated catch block
+    		e.printStackTrace();
+    	}
     }
 }
