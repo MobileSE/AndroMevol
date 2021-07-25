@@ -62,6 +62,7 @@ public class MiningMethodFieldTransformer extends SceneTransformer {
 	protected void internalTransform(String arg0, Map<String, String> arg1) 
 	{
 		Chain<SootClass> sootClasses = Scene.v().getApplicationClasses();
+		System.out.println("soot classes:" + sootClasses.size());
 		for (Iterator<SootClass> iter = sootClasses.snapshotIterator(); iter.hasNext(); )
 		{
 			SootClass sc = iter.next();

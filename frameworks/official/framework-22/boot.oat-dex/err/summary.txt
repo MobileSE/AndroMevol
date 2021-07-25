@@ -1,0 +1,30 @@
+There are 1 methods fail to translate.
+2021-07-18 07:28:55 UTC
+version: [dex-reader-2.0, dex-reader-api-2.0, dex-ir-2.0, d2j-smali-2.0, d2j-base-cmd-2.0, dex-tools-2.0, dex-translator-2.0]
+cmdline: [framework.dex]
+env:
+java.runtime.name: Java(TM) SE Runtime Environment
+java.vm.version: 25.271-b09
+java.vm.vendor: Oracle Corporation
+java.vendor.url: http://java.oracle.com/
+java.vm.name: Java HotSpot(TM) 64-Bit Server VM
+java.vm.specification.name: Java Virtual Machine Specification
+java.runtime.version: 1.8.0_271-b09
+java.awt.graphicsenv: sun.awt.CGraphicsEnvironment
+java.endorsed.dirs: /Library/Java/JavaVirtualMachines/jdk1.8.0_271.jdk/Contents/Home/jre/lib/endorsed
+java.io.tmpdir: /var/folders/xp/lrg0gfms3_1cm7zzjk_np0rxptg1w1/T/
+java.vm.specification.vendor: Oracle Corporation
+java.library.path: /Users/pliu0032/Library/Java/Extensions:/Library/Java/Extensions:/Network/Library/Java/Extensions:/System/Library/Java/Extensions:/usr/lib/java:.
+java.specification.name: Java Platform API Specification
+java.class.version: 52.0
+java.awt.printerjob: sun.lwawt.macosx.CPrinterJob
+java.specification.version: 1.8
+java.class.path: .:/Users/pliu0032/opt/dex2jar-2.0/lib/antlr-runtime-3.5.jar:/Users/pliu0032/opt/dex2jar-2.0/lib/asm-debug-all-4.1.jar:/Users/pliu0032/opt/dex2jar-2.0/lib/d2j-base-cmd-2.0.jar:/Users/pliu0032/opt/dex2jar-2.0/lib/d2j-jasmin-2.0.jar:/Users/pliu0032/opt/dex2jar-2.0/lib/d2j-smali-2.0.jar:/Users/pliu0032/opt/dex2jar-2.0/lib/dex-ir-2.0.jar:/Users/pliu0032/opt/dex2jar-2.0/lib/dex-reader-2.0.jar:/Users/pliu0032/opt/dex2jar-2.0/lib/dex-reader-api-2.0.jar:/Users/pliu0032/opt/dex2jar-2.0/lib/dex-tools-2.0.jar:/Users/pliu0032/opt/dex2jar-2.0/lib/dex-translator-2.0.jar:/Users/pliu0032/opt/dex2jar-2.0/lib/dex-writer-2.0.jar:/Users/pliu0032/opt/dex2jar-2.0/lib/dx-1.7.jar
+java.vm.specification.version: 1.8
+java.home: /Library/Java/JavaVirtualMachines/jdk1.8.0_271.jdk/Contents/Home/jre
+java.specification.vendor: Oracle Corporation
+java.vm.info: mixed mode
+java.version: 1.8.0_271
+java.ext.dirs: /Users/pliu0032/Library/Java/Extensions:/Library/Java/JavaVirtualMachines/jdk1.8.0_271.jdk/Contents/Home/jre/lib/ext:/Library/Java/Extensions:/Network/Library/Java/Extensions:/System/Library/Java/Extensions:/usr/lib/java
+java.vendor: Oracle Corporation
+java.vendor.url.bug: http://bugreport.sun.com/bugreport/
