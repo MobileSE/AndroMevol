@@ -1,0 +1,11 @@
+<jdk.net.SocketFlow.Status: jdk.net.SocketFlow.Status NO_PERMISSION>:<public static final enum>:<>:<jdk.net.SocketFlow.Status:java.lang.Enum>
+<jdk.net.SocketFlow.Status: jdk.net.SocketFlow.Status IN_PROGRESS>:<public static final enum>:<>:<jdk.net.SocketFlow.Status:java.lang.Enum>
+<jdk.net.SocketFlow.Status: jdk.net.SocketFlow.Status OTHER>:<public static final enum>:<>:<jdk.net.SocketFlow.Status:java.lang.Enum>
+<jdk.net.SocketFlow.Status: jdk.net.SocketFlow.Status OK>:<public static final enum>:<>:<jdk.net.SocketFlow.Status:java.lang.Enum>
+<jdk.net.ExtendedSocketOptions: java.net.SocketOption SO_FLOW_SLA>:<public static final>:<SignatureTag:Ljava/net/SocketOption<Ljdk/net/SocketFlow;>;>:<jdk.net.ExtendedSocketOptions>
+<jdk.net.SocketFlow: int NORMAL_PRIORITY>:<public static final>:<IntegerConstantValueTag:1>:<jdk.net.SocketFlow>
+<jdk.net.SocketFlow.Status: jdk.net.SocketFlow.Status ALREADY_CREATED>:<public static final enum>:<>:<jdk.net.SocketFlow.Status:java.lang.Enum>
+<jdk.net.SocketFlow: int HIGH_PRIORITY>:<public static final>:<IntegerConstantValueTag:2>:<jdk.net.SocketFlow>
+<jdk.net.SocketFlow.Status: jdk.net.SocketFlow.Status NOT_SUPPORTED>:<public static final enum>:<>:<jdk.net.SocketFlow.Status:java.lang.Enum>
+<jdk.net.SocketFlow.Status: jdk.net.SocketFlow.Status NOT_CONNECTED>:<public static final enum>:<>:<jdk.net.SocketFlow.Status:java.lang.Enum>
+<jdk.net.SocketFlow.Status: jdk.net.SocketFlow.Status NO_STATUS>:<public static final enum>:<>:<jdk.net.SocketFlow.Status:java.lang.Enum>
