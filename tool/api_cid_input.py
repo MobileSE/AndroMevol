@@ -13,9 +13,56 @@ outs:
 """
 
 import os
+import re
 import csv
 
 from collections import defaultdict
+
+
+def csv_write(out_path, headers, content):
+    with open(out_path, 'w') as f:
+        writer = csv.writer(f)
+        writer.writerow(headers)
+        writer.writerows(content)
+
+def is_valid_item(item):
+    is_valid = True
+    if "'" in item:
+        is_valid = False
+        return is_valid
+    match = re.search(r'<(\S+):\s(\S+)\s(\S+)\((.*)\)>', item)
+    if match:
+        class_name = match.group(1)
+        rtn_type = match.group(2)
+        method_name = match.group(3)
+        parameters = match.group(4)
+
+        match1 = re.search(r'\S+.\d+$', class_name)
+        if match1:
+            is_valid = False
+            return is_valid
+
+        hash = ".".join(class_name.split(".")[:3])
+        if hash == "com.android.internal" or hash == "com.android.framework":
+            is_valid = False
+            return is_valid
+
+        match2 = re.search(r'\S+.\d+$', method_name)
+        if match2:
+            return False
+
+        match4 = re.search(r'.V\d+_\d+.', class_name)
+        if match4:
+            return False
+        flag1 = 0
+        for paramter in parameters:
+            match3 = re.search(r'\S+.\d+$', paramter.strip())
+            if match3:
+                flag1 = 1
+                break
+        if flag1 == 1:
+            return False
+    return True
 
 def csv_generate(method_fields):
     base_dir = '../res'
@@ -26,28 +73,41 @@ def csv_generate(method_fields):
     device_outs = []
     device_headers = []
     device_apis = []
+    method_missing = []
+    method_specific = []
+    field_missing = []
+    field_specific = []
     level_repo_apis = defaultdict(lambda : defaultdict(set))
     for method_field in method_fields:
         for i in range(19, 31):
-            if i == 20:
-                continue
             outs = []
             headers = []
             repo_apis = defaultdict(set)
             for repo in repos:
                 api_txt = os.path.join(base_dir, repo, 'framework-' + str(i), '{}.txt'.format(method_field))
-                if method_field == 'fields':
-                    print(api_txt)
                 if os.path.exists(api_txt):
                     apis = []
                     with open(api_txt) as f:
                         lines = [line.strip() for line in f.readlines()]
                     if lines:
                         for line in lines:
+                            if line.startswith('<java.') or line.startswith('<javax.'):
+                                continue
                             splits = line.split('>:<')
-                            if '<android.os.Build.VERSION: int SDK_INT>' in splits[0]:
-                                print(i, repo)
-                            apis.append(splits[0] + '>')
+                            api_define = ''
+                            if repo == 'official':
+                                api_define = splits[0]
+                                print('api define', api_define)
+                                if method_field == 'fields':
+                                    if '=' in splits[0]:
+                                        api_define = splits[0].split('=')[0].strip() + '>'
+                            else:
+                                if 'private' in splits[1]:
+                                    continue
+                                if not is_valid_item(line):
+                                    continue
+                                api_define = splits[0] + '>'
+                            apis.append(api_define)
                         repo_apis[repo].update(set(apis))
             visited_apis = set()
             if repo_apis:
@@ -74,16 +134,36 @@ def csv_generate(method_fields):
                         for name in repos:
                             device_curr.append(device_repo_api[name])
                         if 0 in device_curr:
+#                        if True:
                             device_apis.append(device_curr)
+                            if method_field == 'methods':
+                                if device_curr[4] == 1:
+                                    method_specific.append(device_curr)
+                                else:
+                                    method_missing.append(device_curr)
+                            else:
+                                if device_curr[4] == 1:
+                                    field_specific.append(device_curr)
+                                else:
+                                    field_missing.append(device_curr)
                         if not device_headers:
                             device_headers = ['level', 'api']
                             device_headers.extend(repos)
                         device_outs.append(device_curr)
+        print(method_field, len(device_outs))
     device_specific_out = os.path.join(out_base, 'device_specific_apis.csv')
     with open(device_specific_out, 'w') as f:
         writer = csv.writer(f)
         writer.writerow(device_headers)
         writer.writerows(device_apis)
+    method_specific_out = os.path.join(out_base, 'method_specific.csv')
+    method_missing_out = os.path.join(out_base, 'method_missing.csv')
+    field_specific_out = os.path.join(out_base, 'field_specific.csv')
+    field_missing_out = os.path.join(out_base, 'field_missing.csv')
+    csv_write(method_specific_out, device_headers, method_specific)
+    csv_write(method_missing_out, device_headers, method_missing)
+    csv_write(field_specific_out, device_headers, field_specific)
+    csv_write(field_missing_out, device_headers, field_missing)
 
 
 if __name__ == '__main__':
