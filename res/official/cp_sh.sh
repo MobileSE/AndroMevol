@@ -13,7 +13,7 @@ for ((i=19;i<=END;i++)); do
         echo $dirname
         if [ -d "$dirname" ];
         then
-            cp $src_field_dir/framework-$i/fields.txt $dirname/fields.txt
+            cat $src_field_dir/framework-$i/fields.txt $src_field_dir/framework-$i/fields.hide.txt > $dirname/fields.txt
             cat $src_method_dir/framework-$i/methods.txt $src_method_dir/framework-$i/methods.hide.txt > $dirname/methods.txt
         else
             mkdir $dirname

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import edu.monash.utils.CommonUtils;
 import soot.Body;
 import soot.Modifier;
 import soot.PatchingChain;
@@ -72,9 +73,24 @@ public class MiningMethodFieldTransformer extends SceneTransformer {
 				continue;
 			}
 
+			Set<String> classModifiers = new HashSet<String>();
 			SootClass superCls = sc;
 			StringBuilder superClsNames = new StringBuilder();
 			superClsNames.append(sc.getName().replace("$", "."));
+			
+			CommonUtils.modifiersToSet(Modifier.toString(sc.getModifiers()), classModifiers);
+			if (sc.getName().contains("$")) {
+				String tempSootClassName = sc.getName();
+				while (tempSootClassName.contains("$")) {
+					int lastDollar = tempSootClassName.lastIndexOf("$");
+					String parentClassName = tempSootClassName.substring(0, lastDollar); //.replace("$", ".");
+					SootClass parentSootCls = Scene.v().getSootClass(parentClassName);
+					if (null != parentSootCls) {
+						CommonUtils.modifiersToSet(Modifier.toString(parentSootCls.getModifiers()), classModifiers);
+					}
+					tempSootClassName = tempSootClassName.substring(0, lastDollar);
+				}
+			}
 			boolean firstSuperCls = true;
 			while (superCls.hasSuperclass()) {
 				superCls = superCls.getSuperclass();
@@ -114,11 +130,15 @@ public class MiningMethodFieldTransformer extends SceneTransformer {
 			for (int i = 0; i < methods.size(); i++)
 			{
 				String sig = methods.get(i).getSignature().replace("$", ".");
-				String mods = Modifier.toString(methods.get(i).getModifiers());
+//				String mods = Modifier.toString(methods.get(i).getModifiers());
 //				if (!mods.isEmpty() && mods.contains("private")) {
 //					continue;
 //				}
-				String apiMethod = sig + ":<" + mods + ">:<" + superClsNames.toString() + ">";
+				Set<String> methodMods = new HashSet<String>();
+				CommonUtils.modifiersToSet(Modifier.toString(methods.get(i).getModifiers()), methodMods);
+				methodMods.addAll(classModifiers);
+				String methodMofifiers = CommonUtils.modifiersSetToString(methodMods);
+				String apiMethod = sig + ":<" + methodMofifiers + ">:<" + superClsNames.toString() + ">";
 //				System.out.println(apiMethod);
 				apimethods.add(apiMethod);
 			}
@@ -126,8 +146,11 @@ public class MiningMethodFieldTransformer extends SceneTransformer {
 			Chain<SootField> chain  = sc.getFields();
 			for (SootField field : chain) {
 				String fieldDec = field.getSignature().replace("$", ".");
-				String mods = Modifier.toString(field.getModifiers());
-				if (!mods.isEmpty() && mods.contains("private")) {
+				Set<String> fieldMods = new HashSet<String>();
+				CommonUtils.modifiersToSet(Modifier.toString(field.getModifiers()), fieldMods);
+				fieldMods.addAll(classModifiers);
+				String fieldModifiers = CommonUtils.modifiersSetToString(fieldMods);
+				if (fieldModifiers.contains("private")) {
 					continue;
 				}
 				StringBuilder tagValues = new StringBuilder();
@@ -168,10 +191,10 @@ public class MiningMethodFieldTransformer extends SceneTransformer {
 					}
 				}
 				if (tagValues.toString().isEmpty()) {
-					String apifield = fieldDec + ":<" + mods + ">:<" + "" + ">:<" + superClsNames.toString() + ">";
+					String apifield = fieldDec + ":<" + fieldModifiers + ">:<" + "" + ">:<" + superClsNames.toString() + ">";
 					apifields.add(apifield);
 				} else {
-					String apifield = fieldDec + ":<" + mods + ">:<" + tagValues.toString().replace("\n", " ") + ">:<" + superClsNames.toString() + ">";
+					String apifield = fieldDec + ":<" + fieldModifiers + ">:<" + tagValues.toString().replace("\n", " ") + ">:<" + superClsNames.toString() + ">";
 					apifields.add(apifield);
 				}
 			}

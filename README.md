@@ -10,6 +10,7 @@ AndroMevol now takes 2 parameters to extract apis and fields and write to csv fi
 In addition, directories res and frameworks locate under the same path as AndroidMevol.jar
 # Example
 
+
 ```
 java -jar AndroMevol.jar ./android-platforms ./frameworks/huawei/framework-29/framework.jar
 ```

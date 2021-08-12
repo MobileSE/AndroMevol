@@ -1,11 +1,16 @@
 package edu.monash.utils;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 public class CommonUtils {
+	
+	public static final Set<String> normalClassModifiers = new HashSet<String>(
+			Arrays.asList("public", "protected", "private"));
+	
 	public static void put(Map<String, Set<String>> dest, Map<String, Set<String>> src)
 	{
 		for (Map.Entry<String, Set<String>> entry : src.entrySet())
@@ -103,6 +108,40 @@ public class CommonUtils {
 			}
 			methodFieldData.put(methodFieldKey, currRow);
 		}
+	}
+	
+	public static void modifiersToSet(String modStr, Set<String> modifiers) {
+		String[] splits = modStr.split(" ");
+		boolean isDefault = true;
+		for (String str : splits) {
+			String neatStr = str.trim();
+			if (!neatStr.isEmpty()) {
+				modifiers.add(str.trim());
+				if (normalClassModifiers.contains(neatStr)) {
+					isDefault = false;
+				}
+			}
+		}
+		if (isDefault) {
+			modifiers.add("default");
+		}
+	}
+	
+	public static String modifiersSetToString(Set<String> modifiers) {
+		StringBuilder sb = new StringBuilder();
+		boolean firstMod = true;
+		for (String mod : modifiers) {
+			if (!mod.isEmpty()) {
+				if (firstMod) {
+					sb.append(mod);
+					firstMod = false;
+				} else {
+					sb.append(" " + mod);
+				}
+			}
+		}
+		
+		return sb.toString();
 	}
 
 	private static void newMethodInsert(List<String[]> csvList, String deviceName,
