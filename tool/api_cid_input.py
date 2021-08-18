@@ -25,108 +25,6 @@ def csv_write(out_path, headers, content):
         writer.writerow(headers)
         writer.writerows(content)
 
-def is_valid_field(line):
-    s = line.split(":<")
-    api_sig = s[0].strip()
-    modifiers = s[1].strip("<>").split(" ")
-    item = api_sig
-    if "'" in item:
-        return False, ''
-    match = re.search(r'<(\S+):\s(\S+)\s(\S+)>', item)
-    if match:
-        class_name = match.group(1)
-        rtn_type = match.group(2)
-        field_name = match.group(3)
-
-        match1 = re.search(r'\S+\.\d+$', class_name)
-        if match1:
-            return False, ''
-
-        hash = ".".join(class_name.split(".")[:3])
-        if hash == "com.android.framework":
-            return False, ''
-
-        match2 = re.search(r'\S+\.\d+$', field_name)
-        if match2:
-            return False, ''
-
-        if "." in field_name: # 可以删
-            return False, ''
-
-        match4 = re.search(r'\.V\d+_\d+\.', class_name)
-        if match4:
-            return False, ''
-
-    flag = 0
-    for m in modifiers:
-        if m != "":
-            flag = 1
-        if m.strip() == "private":
-            flag = 0
-            break
-
-    if flag == 0:
-        return False, ''
-    else:
-        return True, api_sig
-
-
-def is_valid_method(line):
-    s = line.split(":<")
-    api_sig = s[0].strip()
-    modifiers = s[1].strip("<>").split(" ")
-    item = api_sig
-    if "'" in item:
-        return False, ''
-    match = re.search(r'<(\S+):\s(\S+)\s(\S+)\((.*)\)>', item)
-    if match:
-        class_name = match.group(1)
-        rtn_type = match.group(2)
-        method_name = match.group(3)
-        parameters = match.group(4)
-
-        match1 = re.search(r'\S+\.\d+$', class_name)
-        if match1:
-            return False, ''
-
-        # hash = ".".join(class_name.split(".")[:3])
-        # if hash == "com.android.internal" or hash == "com.android.framework":
-        #     continue
-
-        hash = ".".join(class_name.split(".")[:3])
-        if hash == "com.android.framework":
-            return False, ''
-
-        match2 = re.search(r'\S+\.\d+$', method_name)
-        if match2:
-            return False, ''
-
-        match4 = re.search(r'\.V\d+_\d+\.', class_name)
-        if match4:
-            return False, ''
-
-        flag1 = 0
-        for paramter in parameters:
-            match3 = re.search(r'\S+\.\d+$', paramter.strip())
-            if match3:
-                flag1 = 1
-                break
-        if flag1 == 1:
-            return False, ''
-
-    flag = 0
-    for m in modifiers:
-        if m != "":
-            flag = 1
-        if m.strip() == "private":
-            flag = 0
-            break
-
-    if flag == 0:
-        return False, ''
-    return True, api_sig
-
-
 def csv_generate(method_fields):
     base_dir = '../res'
     out_base = '../res'
@@ -147,7 +45,7 @@ def csv_generate(method_fields):
             headers = []
             repo_apis = defaultdict(set)
             for repo in repos:
-                api_txt = os.path.join(base_dir, repo, 'framework-' + str(i), '{}.txt'.format(method_field))
+                api_txt = os.path.join(base_dir, repo, 'framework-' + str(i), '{}_unique.txt'.format(method_field))
                 if os.path.exists(api_txt):
                     apis = []
                     with open(api_txt) as f:
@@ -156,25 +54,7 @@ def csv_generate(method_fields):
                         for line in lines:
                             if line.startswith('<java.') or line.startswith('<javax.'):
                                 continue
-                            splits = line.split('>:<')
-                            api_define = ''
-                            if repo == 'official':
-                                api_define = splits[0]
-                                if method_field == 'fields':
-                                    if '=' in splits[0]:
-                                        api_define = splits[0].split('=')[0].strip() + '>'
-                            else:
-                                if method_field == 'methods':
-                                    is_valid, api_define = is_valid_method(line)
-                                    if not is_valid:
-#                                        print(base_dir, repo, 'framework-' + str(i), line)
-                                        continue
-                                else:
-                                    is_valid, api_define = is_valid_field(line)
-                                    if not is_valid:
-#                                        print(base_dir, repo, 'framework-' + str(i), line)
-                                        continue
-                            apis.append(api_define)
+                            apis.append(line)
                         repo_apis[repo].update(set(apis))
             visited_apis = set()
             if repo_apis:
