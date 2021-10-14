@@ -216,48 +216,50 @@ if __name__ == '__main__':
 
     level = 30
     pkg_level = 4
-    METHODS_or_FILEDS = "M"  # or "F"
+    types = ["M", "F"]
+    for typ in types:
+        METHODS_or_FILEDS = typ  # "M" or "F"
 
-    # input field discard
-    all_discard_pkg = "filter_pkg.txt"
-    print("pkg length: ", pkg_level)
+        # input field discard
+        all_discard_pkg = "filter_pkg.txt"
+        print("pkg length: ", pkg_level)
 
-    devices = ["huawei", "miui", "oneplus", "official", "oppo", "samsung"]
-    for device in devices:
-        for d_level in range(19, 31):
-            # input files
-            MiuiMethodFramework = "../res/{}/framework-{}/methods.txt".format(device, d_level)
-            if not os.path.exists(MiuiMethodFramework):
-                continue
-            MiuiMethodFrameworkFiltered = "../res/{}/framework-{}/methods-filtered.txt".format(device, d_level)
+        devices = ["huawei", "miui", "oneplus", "official", "oppo", "samsung"]
+        for device in devices:
+            for d_level in range(19, 31):
+                # input files
+                MiuiMethodFramework = "../res/{}/framework-{}/methods.txt".format(device, d_level)
+                if not os.path.exists(MiuiMethodFramework):
+                    continue
+                MiuiMethodFrameworkFiltered = "../res/{}/framework-{}/methods-filtered.txt".format(device, d_level)
 
-            MiuiFieldFramework = "../res/{}/framework-{}/fields.txt".format(device, d_level)
-            MiuiFieldFrameworkFiltered = "../res/{}/framework-{}/fields-filtered.txt".format(device, d_level)
+                MiuiFieldFramework = "../res/{}/framework-{}/fields.txt".format(device, d_level)
+                MiuiFieldFrameworkFiltered = "../res/{}/framework-{}/fields-filtered.txt".format(device, d_level)
 
 
-            # output files
-            OUTPUT_ROOT = "../res/{}/framework-{}".format(device, d_level)
-            if not os.path.exists(OUTPUT_ROOT):
-                os.mkdir(OUTPUT_ROOT)
-            SAVE_Methods_unique = os.path.join(OUTPUT_ROOT, "methods_unique.txt")
-            SAVE_Fields_unique = os.path.join(OUTPUT_ROOT, "fields_unique.txt")
+                # output files
+                OUTPUT_ROOT = "../res/{}/framework-{}".format(device, d_level)
+                if not os.path.exists(OUTPUT_ROOT):
+                    os.mkdir(OUTPUT_ROOT)
+                SAVE_Methods_unique = os.path.join(OUTPUT_ROOT, "methods_unique.txt")
+                SAVE_Fields_unique = os.path.join(OUTPUT_ROOT, "fields_unique.txt")
 
-            # Framework filter first
-            if METHODS_or_FILEDS == "M":
-                if device != 'official':
-                    filter_methods(MiuiMethodFramework, MiuiMethodFrameworkFiltered)
+                # Framework filter first
+                if METHODS_or_FILEDS == "M":
+                    if device != 'official':
+                        filter_methods(MiuiMethodFramework, MiuiMethodFrameworkFiltered)
+                    else:
+                        src_path = "../res/{}/framework-{}/methods.txt".format(device, d_level)
+                        dest_path = "../res/{}/framework-{}/methods-filtered.txt".format(device, d_level)
+                        os.popen('cp ' + src_path + ' ' + dest_path).read()
                 else:
-                    src_path = "../res/{}/framework-{}/methods.txt".format(device, d_level)
-                    dest_path = "../res/{}/framework-{}/methods-filtered.txt".format(device, d_level)
-                    os.popen('cp ' + src_path + ' ' + dest_path).read()
-            else:
-                if device != 'official':
-                    filter_fields(MiuiFieldFramework, MiuiFieldFrameworkFiltered)
-                else:
-                    src_path = "../res/{}/framework-{}/fields.txt".format(device, d_level)
-                    dest_path = "../res/{}/framework-{}/fields-filtered.txt".format(device, d_level)
-                    os.popen('cp ' + src_path + ' ' + dest_path).read()
+                    if device != 'official':
+                        filter_fields(MiuiFieldFramework, MiuiFieldFrameworkFiltered)
+                    else:
+                        src_path = "../res/{}/framework-{}/fields.txt".format(device, d_level)
+                        dest_path = "../res/{}/framework-{}/fields-filtered.txt".format(device, d_level)
+                        os.popen('cp ' + src_path + ' ' + dest_path).read()
 
 
-            # select
-            get_by_pkg(pkg_level, METHODS_or_FILEDS, all_discard_pkg, MiuiMethodFrameworkFiltered, SAVE_Methods_unique)
+                # select
+                get_by_pkg(pkg_level, METHODS_or_FILEDS, all_discard_pkg, MiuiMethodFrameworkFiltered, SAVE_Methods_unique)
