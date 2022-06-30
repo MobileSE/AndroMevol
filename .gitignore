@@ -14,3 +14,17 @@ hs_err_pid*
 /bin/
 *-filtered.txt
 *_unique.txt
+*.bk
+**/.DS_Store
+*.dex
+*-dex
+*.tar.gz
+test_detect_api.txt
+hide_method_rm.py
+hide_methods_fields.txt
+device_sam30_process.py
+compatible_api.txt
+compatible_field.txt
+evol_induced_apis.txt
+cp_sh.sh
+api_life_trim.py

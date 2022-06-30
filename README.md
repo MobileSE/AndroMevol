@@ -12,5 +12,5 @@ In addition, directories res and frameworks locate under the same path as Androi
 
 
 ```
-java -jar AndroMevol.jar ./android-platforms ./frameworks/huawei/framework-29/framework.jar
+java -jar AndroMevol.jar ./android-platforms ./frameworks/huawei/framework-29/framework.jar  ./res
 ```

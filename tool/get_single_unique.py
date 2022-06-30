@@ -246,20 +246,22 @@ if __name__ == '__main__':
 
                 # Framework filter first
                 if METHODS_or_FILEDS == "M":
+#                    filter_methods(MiuiMethodFramework, MiuiMethodFrameworkFiltered)
                     if device != 'official':
                         filter_methods(MiuiMethodFramework, MiuiMethodFrameworkFiltered)
                     else:
                         src_path = "../res/{}/framework-{}/methods.txt".format(device, d_level)
                         dest_path = "../res/{}/framework-{}/methods-filtered.txt".format(device, d_level)
                         os.popen('cp ' + src_path + ' ' + dest_path).read()
+                    # select
+                    get_by_pkg(pkg_level, METHODS_or_FILEDS, all_discard_pkg, MiuiMethodFrameworkFiltered, SAVE_Methods_unique)
                 else:
+#                    filter_fields(MiuiFieldFramework, MiuiFieldFrameworkFiltered)
                     if device != 'official':
                         filter_fields(MiuiFieldFramework, MiuiFieldFrameworkFiltered)
                     else:
                         src_path = "../res/{}/framework-{}/fields.txt".format(device, d_level)
                         dest_path = "../res/{}/framework-{}/fields-filtered.txt".format(device, d_level)
                         os.popen('cp ' + src_path + ' ' + dest_path).read()
-
-
-                # select
-                get_by_pkg(pkg_level, METHODS_or_FILEDS, all_discard_pkg, MiuiMethodFrameworkFiltered, SAVE_Methods_unique)
+                    # select
+                    get_by_pkg(pkg_level, METHODS_or_FILEDS, all_discard_pkg, MiuiFieldFrameworkFiltered, SAVE_Fields_unique)
